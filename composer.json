@@ -1,0 +1,15 @@
+{
+    "name": "devin/visualiser",
+    "type": "project",
+    "require": {
+        "ptrofimov/tinyredisclient": "^1.1",
+        "symfony/var-dumper": "^6.0",
+        "predis/predis": "^1.1"
+    },
+    "authors": [
+        {
+            "name": "Devin Norgarb",
+            "email": "dnorgarb@gmail.com"
+        }
+    ]
+}

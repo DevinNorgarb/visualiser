@@ -1,0 +1,39 @@
+{
+  "server": {
+    "port": 3003,
+    "host": "0.0.0.0",
+    "debug": false
+  },
+  "tile38": {
+    "port": "9851",
+    "host": "localhost",
+    "debug": true
+  },
+  "swagger": {
+    "basePath": "/swagger",
+    "externalDocs": {
+      "url": "",
+      "description": "Source code on Github"
+    },
+    "info": {
+      "title": "",
+      "description": "",
+      "version": "1"
+    },
+    "schemes": ["http", "https"],
+    "tags": [
+      {
+        "name": "api",
+        "description": "code related end-points"
+      },
+      {
+        "name": "display",
+        "description": "features in common formats for direct mapping."
+      },
+      {
+        "name": "search",
+        "description": "meta information for views."
+      }
+    ]
+  }
+}
