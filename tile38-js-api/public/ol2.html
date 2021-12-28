@@ -62,7 +62,9 @@
             }),
             new deck.ArcLayer({
                 id: 'arcs',
-                data: AIR_PORTS,
+                // data: AIR_PORTS,
+                data: "https://tiles.devsdev.com/v1/intersects/pup/{z}/{x}/{y}",
+
                 dataTransform: d => d.features.filter(f => f.properties.scalerank < 4),
                 // Styles
                 getSourcePosition: f => [-0.4531566, 51.4709959], // London
