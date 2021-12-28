@@ -1,0 +1,78 @@
+{
+    "version": 8,
+    "name": "example-style-for-style-layer-glossary-entry",
+    "metadata": {
+        "mapbox:autocomposite": false,
+        "mapbox:type": "template",
+        "mapbox:sdk-support": {
+            "android": "9.3.0",
+            "ios": "5.10.0",
+            "js": "2.0.0"
+        },
+        "mapbox:trackposition": false,
+        "mapbox:groups": {},
+        "mapbox:uiParadigm": "layers"
+    },
+    "center": [-43.006782165240026, -22.719847359586097],
+    "zoom": 10.858989996493369,
+    "bearing": 0,
+    "pitch": 0,
+    "sources": {
+        "pickup_points": {
+
+            "tiles": [
+                "https://tiles.devsdev.com/v1/intersects/pup/{z}/{x}/{y}"
+            ],
+            "type": "vector"
+        },
+        "mapbox://mapbox.mapbox-streets-v8": {
+            "url": "mapbox://mapbox.mapbox-streets-v8",
+
+            "type": "vector"
+        }
+    },
+    "sprite": "mapbox://sprites/examples/ckl6oxc3j4an117khpgdtvbvh/ck2u8j60r58fu0sgyxrigm3cu",
+    "glyphs": "mapbox://fonts/examples/{fontstack}/{range}.pbf",
+    "layers": [{
+            "id": "background",
+            "type": "background",
+            "layout": {},
+            "paint": {
+                "background-color": "#447C12"
+            }
+        },
+        {
+            "id": "water",
+            "type": "fill",
+            "source": "mapbox://mapbox.mapbox-streets-v8",
+            "source-layer": "water",
+            "layout": {},
+            "paint": {
+                "fill-color": "#0B496B"
+            }
+        },
+        {
+            "id": "pickup_point",
+            "type": "circle",
+            "source": "pickup_points",
+            "source-layer": "pickup_points",
+            "layout": {},
+            "paint": {
+                "circle-color": "#11b4da",
+                "circle-radius": 4,
+                "circle-stroke-width": 1,
+                "circle-stroke-color": "#fff"
+            }
+
+        }
+
+
+
+    ],
+    "created": "2021-02-15T14:46:14.631Z",
+    "modified": "2021-02-15T14:49:30.516Z",
+    "id": "ckl6oxc3j4an117khpgdtvbvh",
+    "owner": "examples",
+    "visibility": "public",
+    "draft": false
+}

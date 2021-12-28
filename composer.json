@@ -4,7 +4,8 @@
     "require": {
         "ptrofimov/tinyredisclient": "^1.1",
         "symfony/var-dumper": "^6.0",
-        "predis/predis": "^1.1"
+        "predis/predis": "^1.1",
+        "halaxa/json-machine": "^0.7.1"
     },
     "authors": [
         {

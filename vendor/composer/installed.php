@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '6fe3004ab841a0d50d3cb12df5368ca9e6366f9f',
+    'reference' => '3e1e7260437e2db45f0498cba95dadd4ca420066',
     'name' => 'devin/visualiser',
   ),
   'versions' => 
@@ -18,7 +18,16 @@
       'aliases' => 
       array (
       ),
-      'reference' => '6fe3004ab841a0d50d3cb12df5368ca9e6366f9f',
+      'reference' => '3e1e7260437e2db45f0498cba95dadd4ca420066',
+    ),
+    'halaxa/json-machine' => 
+    array (
+      'pretty_version' => '0.7.1',
+      'version' => '0.7.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '1d119aeed3e8c62a13d059b595e89fc5c0df2576',
     ),
     'predis/predis' => 
     array (

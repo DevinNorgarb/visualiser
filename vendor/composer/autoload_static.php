@@ -8,6 +8,7 @@ class ComposerStaticInit4cdc29198e7c67c4036a09b19476a951
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        'ace6d88241f812b4accb2d847454aef6' => __DIR__ . '/..' . '/halaxa/json-machine/src/functions.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
     );
 
@@ -20,6 +21,10 @@ class ComposerStaticInit4cdc29198e7c67c4036a09b19476a951
         'P' => 
         array (
             'Predis\\' => 7,
+        ),
+        'J' => 
+        array (
+            'JsonMachine\\' => 12,
         ),
     );
 
@@ -35,6 +40,10 @@ class ComposerStaticInit4cdc29198e7c67c4036a09b19476a951
         'Predis\\' => 
         array (
             0 => __DIR__ . '/..' . '/predis/predis/src',
+        ),
+        'JsonMachine\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/halaxa/json-machine/src',
         ),
     );
 
