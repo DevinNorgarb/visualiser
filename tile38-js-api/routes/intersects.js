@@ -58,11 +58,11 @@ module.exports = function(fastify, opts, next) {
                             tolerance: 4,
                             extent: 4096, // tile extent (both width and height)
                             buffer: 64,
-                            debug: 0,
+                            debug: 2,
                             indexMaxZoom: 24,
                             indexMinZoom: 1,
                             indexMaxPoints: 1000000,
-                            solidChildren: false, // whether to include solid tile children in the index
+                            solidChildren: true, // whether to include solid tile children in the index
                         };
 
                         const tileIndex = geojsonvt(res, tileOptions);
