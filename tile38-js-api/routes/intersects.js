@@ -38,14 +38,14 @@ module.exports = function(fastify, opts, next) {
         url: "/intersects/:table/:z/:x/:y",
         schema: schema,
         handler: function(request, reply) {
-            // console.error(
-            //   request.params.table,
-            //   "/" + request.params.z + "/" + request.params.x + "/" + request.params.y
-            // );
+            console.info(
+                request.params.table,
+                "/" + request.params.z + "/" + request.params.x + "/" + request.params.y
+            );
             let intersects = Tile38client.intersectsQuery(request.params.table)
                 .tile(request.params.x, request.params.y, request.params.z)
-                .cursor(1000)
-                .limit(1000000);
+                .cursor(100)
+                .limit(1000);
             intersects
                 .execute()
                 .then((results) => {
@@ -54,14 +54,14 @@ module.exports = function(fastify, opts, next) {
 
                         var tileOptions = {
                             maxZoom: 24,
-                            minZoom: 1,
-                            tolerance: 4,
+                            minZoom: 0,
+                            tolerance: 5,
                             extent: 4096, // tile extent (both width and height)
                             buffer: 64,
                             debug: 2,
                             indexMaxZoom: 24,
-                            indexMinZoom: 1,
-                            indexMaxPoints: 1000000,
+                            indexMinZoom: 0,
+                            indexMaxPoints: 100000,
                             solidChildren: true, // whether to include solid tile children in the index
                         };
 

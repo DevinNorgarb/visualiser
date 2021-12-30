@@ -33,8 +33,8 @@
         mapboxApiAccessToken: 'pk.eyJ1IjoidWJlcmRhdGEiLCJhIjoiY2pudzRtaWloMDAzcTN2bzN1aXdxZHB5bSJ9.2bkj3IiRC8wj3jLThvDGdA',
 
         initialViewState: {
-            latitude: 51.47,
-            longitude: 0.45,
+            latitude: -27,
+            longitude: 33,
             zoom: 4,
             bearing: 0,
             pitch: 30,
@@ -45,7 +45,7 @@
             new deck.MVTLayer({
                 id: 'airports',
                 // data: AIR_PORTS,
-                data: "https://tiles.devsdev.com/v1/intersects/pup/{z}/{x}/{y}",
+                data: "https://tiles.devsdev.com/v1/intersects/pups/{z}/{x}/{y}",
                 // Styles
                 filled: true,
                 pointRadiusMinPixels: 2,
@@ -55,19 +55,21 @@
                 // Interactive props
                 pickable: true,
                 autoHighlight: true,
-                onClick: info => info.object && alert(`${info.object.properties.name} (${info.object.properties.abbrev})`)
+                onClick: info => info.object && console.log(`${JSON.stringify(info.object)} (${info.object.properties.abbrev})`)
             }),
 
             new deck.ColumnLayer({
-                id: 'airports',
-                data: "https://tiles.devsdev.com/v1/intersects/pup/{z}/{x}/{y}",
+                id: 'geojsonLayer',
+                // data: AIR_PORTS,
+                data: "https://tiles.devsdev.com/v1/intersects/pups/{z}/{x}/{y}",
+
                 diskResolution: 12,
-                radius: 250,
+                radius: 2500,
                 extruded: true,
                 pickable: true,
                 filled: true,
 
-                elevationScale: 50000,
+                elevationScale: 1000,
                 getPosition: d => d.centroid,
                 getFillColor: d => [48, 128, d.value * 255, 255],
                 getLineColor: [0, 0, 0],

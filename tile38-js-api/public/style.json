@@ -19,7 +19,6 @@
     "pitch": 0,
     "sources": {
         "pickup_points": {
-
             "tiles": [
                 "https://tiles.devsdev.com/v1/intersects/pup/{z}/{x}/{y}"
             ],
@@ -27,7 +26,6 @@
         },
         "mapbox://mapbox.mapbox-streets-v8": {
             "url": "mapbox://mapbox.mapbox-streets-v8",
-
             "type": "vector"
         }
     },
