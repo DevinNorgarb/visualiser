@@ -2,9 +2,20 @@
 
 <head>
     <!-- deck.gl standalone bundle -->
-    <script src="https://unpkg.com/deck.gl@^8.6.0-alpha.0/dist.min.js"></script>
+    <!-- <script src="https://unpkg.com/h3-js"></script>
 
+    <script src="https://unpkg.com/deck.gl@^8.6.0-alpha.0/dist/dist.dev.js"></script>
+ -->
+
+    <script src="https://unpkg.com/h3-js"></script>
+    <script src="https://unpkg.com/deck.gl@^8.6.0-alpha/dist/dist.dev.js"></script>
+    <!-- or -->
+    <script src="https://unpkg.com/@deck.gl/core@^8.6.0-alpha/dist/dist.dev.js"></script>
+    <script src="https://unpkg.com/@deck.gl/layers@^8.6.0-alpha/dist/dist.dev.js"></script>
+    <script src="https://unpkg.com/@deck.gl/geo-layers@^8.6.0-alpha/dist/dist.dev.js"></script>
     <!-- Mapbox dependencies -->
+    <script src="https://unpkg.com/@deck.gl/aggregation-layers@^8.0.0/dist/dist.dev.js"></script>
+
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js"></script>
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css" rel="stylesheet" />
 
@@ -25,111 +36,178 @@
     <div id="container"></div>
 </body>
 
+
 <script type="text/javascript">
     // source: Natural Earth http://www.naturalearthdata.com/ via geojson.xyz
-    const AIR_PORTS = "https://tiles.devsdev.com/v1/geojson/pups/{z}/{x}/{y}"
+    const AIR_PORTS = "https://tiles.devsdev.com/v1/geojson/points_encoded/{z}/{x}/{y}"
+        //  "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf.h3cells.json"
         // 'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_10m_airports.geojson';
 
     console.log(deck);
 
-    const deckgl = new deck.DeckGL({
-        container: 'container',
-        // Set your Mapbox access token here
-        mapboxApiAccessToken: 'pk.eyJ1IjoidWJlcmRhdGEiLCJhIjoiY2pudzRtaWloMDAzcTN2bzN1aXdxZHB5bSJ9.2bkj3IiRC8wj3jLThvDGdA',
 
-        initialViewState: {
-            latitude: -33,
-            longitude: 27,
-            zoom: 4,
-            bearing: 0,
-            pitch: 30,
+
+
+
+    const layer = new deck.TileLayer({
+        stroked: false,
+
+        getLineColor: [192, 192, 192],
+        getFillColor: [140, 170, 180],
+
+        getLineWidth: f => {
+            if (f.properties.layer === 'transportation') {
+                switch (f.properties.class) {
+                    case 'primary':
+                        return 12;
+                    case 'motorway':
+                        return 16;
+                    default:
+                        return 6;
+                }
+            }
+            return 1;
         },
-        controller: true,
+        lineWidthMinPixels: 1,
 
-        layers: [
-            // new deck.TileLayer({
-            //     // https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers
-            //     // data: AIR_PORTS,
-            //     data: 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
-
-            //     minZoom: 0,
-            //     maxZoom: 19,
-            //     tileSize: 256,
-
-            //     renderSubLayers: props => {
-            //         const {
-            //             bbox: {
-            //                 west,
-            //                 south,
-            //                 east,
-            //                 north
-            //             }
-            //         } = props.tile;
-
-            //         return new deck.BitmapLayer(props, {
-            //             data: null,
-            //             image: props.data,
-            //             bounds: [west, south, east, north]
-            //         });
-            //     }
-            // }),
-
-            new deck.H3HexagonLayer({
-                id: 'airports',
-                data: AIR_PORTS,
-                pickable: true,
-                wireframe: false,
-                filled: true,
-                extruded: true,
-                elevationScale: 2000,
-                getHexagon: d => d.hex,
-                getFillColor: d => [255, (1 - d.count / 500) * 255, 0],
-                getElevation: d => d.count
-            }),
-            new deck.MVTLayer({
-                id: 'airports2',
-                data: AIR_PORTS,
-                // Styles
-                filled: true,
-                pointRadiusMinPixels: 2,
-                pointRadiusScale: 2000,
-                getPointRadius: f => (11 - f.properties.scalerank),
-                // getFillColor: [200, 0, 80, 180],
-                // Interactive props
-                pickable: true,
-                autoHighlight: true,
-                onClick: info => info.object && alert(`${info.object.properties.id} (${info.object.properties.id})`)
-                    // renderSubLayers: props => {
-                    //     const {
-                    //         bbox: {
-                    //             west,
-                    //             south,
-                    //             east,
-                    //             north
-                    //         }
-                    //     } = props.tile;
-
-                //     return new deck.H3ClusterLayer(props, {
-                //         data: null,
-                //         image: props.data,
-                //         bounds: [west, south, east, north]
-                //     });
-                // }
-            }),
-
-            new deck.ArcLayer({
-                id: 'arcs',
-                data: AIR_PORTS,
-                dataTransform: d => d.features.filter(f => f.properties.scalerank < 4),
-                // Styles
-                getSourcePosition: f => [-0.4531566, 51.4709959], // London
-                getTargetPosition: f => f.geometry.coordinates,
-                getSourceColor: [0, 128, 200],
-                getTargetColor: [200, 0, 80],
-                getWidth: 1
-            })
-        ]
+        getTileData: ({
+            x,
+            y,
+            z
+        }) => {
+            const mapSource = AIR_PORTS;
+            return fetch(mapSource)
+                .then(response => response.arrayBuffer())
+                .then(buffer => {
+                    const tile = new VectorTile(new Protobuf(buffer));
+                    const features = [];
+                    for (const layerName in tile.layers) {
+                        const vectorTileLayer = tile.layers[layerName];
+                        for (let i = 0; i < vectorTileLayer.length; i++) {
+                            const vectorTileFeature = vectorTileLayer.feature(i);
+                            const feature = vectorTileFeature.toGeoJSON(x, y, z);
+                            features.push(feature);
+                        }
+                    }
+                    return features;
+                });
+        }
     });
+
+
+    // return;
+
+
+    // const deckgl = new deck.DeckGL({
+    //     container: 'container',
+    //     // Set your Mapbox access token here
+    //     mapboxApiAccessToken: 'pk.eyJ1IjoidWJlcmRhdGEiLCJhIjoiY2pudzRtaWloMDAzcTN2bzN1aXdxZHB5bSJ9.2bkj3IiRC8wj3jLThvDGdA',
+
+    //     initialViewState: {
+    //         latitude: -33,
+    //         longitude: 27,
+    //         zoom: 4,
+    //         bearing: 0,
+    //         pitch: 30,
+    //     },
+    //     controller: true,
+
+    //     layers: [
+    //         // new deck.TileLayer({
+    //         //     // https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers
+    //         //     // data: AIR_PORTS,
+    //         //     data: 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
+
+    //         //     minZoom: 0,
+    //         //     maxZoom: 19,
+    //         //     tileSize: 256,
+
+    //         //     renderSubLayers: props => {
+    //         //         const {
+    //         //             bbox: {
+    //         //                 west,
+    //         //                 south,
+    //         //                 east,
+    //         //                 north
+    //         //             }
+    //         //         } = props.tile;
+
+    //         //         return new deck.BitmapLayer(props, {
+    //         //             data: null,
+    //         //             image: props.data,
+    //         //             bounds: [west, south, east, north]
+    //         //         });
+    //         //     }
+    //         // }),
+
+    //         // new deck.H3HexagonLayer({
+    //         //     id: 'airports',
+    //         //     data: AIR_PORTS,
+    //         //     pickable: false,
+    //         //     wireframe: false,
+    //         //     filled: true,
+    //         //     extruded: true,
+    //         //     elevationScale: 2000,
+    //         //     getHexagon: d => d.hex,
+    //         //     getFillColor: d => [255, (1 - d.count / 500) * 255, 0],
+    //         //     getElevation: d => () => {
+    //         //         console.log(d.count)
+    //         //     }
+    //         // }),
+    //         new deck.MVTLayer({
+    //             id: 'airports2',
+    //             data: AIR_PORTS,
+    //             // Styles
+    //             filled: false,
+    //             pointRadiusMinPixels: 2,
+    //             pointRadiusScale: 20,
+    //             getPointRadius: 1,
+    //             // getFillColor: [200, 0, 80, 180],
+    //             // Interactive props
+    //             pickable: true,
+    //             autoHighlight: true,
+    //             onClick: info => info.object && console.log(`${JSON.stringify(info.object)} (${info.object.properties.id})`)
+    //                 //     renderSubLayers: props => {
+    //                 //         return new deck.HeatmapLayer({
+    //                 //                 id: 'heatmapLayer',
+    //                 //                 data: props.data,
+    //                 //                 getPosition: d => d.COORDINATES,
+    //                 //                 getWeight: d => d.WEIGHT,
+    //                 //                 aggregation: 'SUM'
+    //                 //             })
+    //                 //             // const {
+    //                 //             //     bbox: {
+    //                 //             //         west,
+    //                 //             //         south,
+    //                 //             //         east,
+    //                 //             //         north
+    //                 //             //     }
+    //                 //             // } = props.tile;
+
+    //             //         // console.log(props);
+
+
+    //             //         // return new deck.H3HexagonLayer(props, {
+    //             //         //     data: null,
+    //             //         //     image: props.data,
+    //             //         //     // bounds: [west, south, east, north]
+    //             //         // });
+    //             //     }
+    //             // }),
+
+    //             // new deck.ArcLayer({
+    //             //     id: 'arcs',
+    //             //     data: AIR_PORTS,
+    //             //     dataTransform: d => d.features.filter(f => f.properties.scalerank < 4),
+    //             //     // Styles
+    //             //     getSourcePosition: f => [-0.4531566, 51.4709959], // London
+    //             //     getTargetPosition: f => f.geometry.coordinates,
+    //             //     getSourceColor: [0, 128, 200],
+    //             //     getTargetColor: [200, 0, 80],
+    //             //     getWidth: 1
+    //         })
+    //     ]
+    // });
 </script>
 
 </html>

@@ -49,39 +49,34 @@ module.exports = function(fastify, opts, next) {
                     if (results.count && results.count > 0) {
                         const res = GeoJSON.parse(results.objects, { GeoJSON: "object" });
                         // console.log(res);
+                        // reply.removeHeader("content-encoding");
 
-                        // reply.type("application/json").send(res);
+                        reply.type("application/json").send(res);
+                        // reply.type("application/protobuf").send(buffer);
 
-                        var tileOptions = {
-                            maxZoom: 24,
-                            tolerance: 7,
-                            extent: 4096, // tile extent (both width and height)
-                            buffer: 64,
-                            debug: 2,
-                            indexMaxZoom: 24,
-                            // indexMinZoom: 1,
-                            indexMaxPoints: 10000,
-                            solidChildren: true, // whether to include solid tile children in the index
-                        };
+                        // var tileOptions = {
+                        //   maxZoom: 24,
+                        //   tolerance: 7,
+                        //   extent: 4096, // tile extent (both width and height)
+                        //   buffer: 64,
+                        //   debug: 2,
+                        //   indexMaxZoom: 24,
+                        //   indexMaxPoints: 10000,
+                        //   solidChildren: false, // whether to include solid tile children in the index
+                        // };
 
-                        // console.log(request.params.z);
-
-                        // console.log(request.params.x);
-
-                        // console.log(request.params.y);
-
-                        const tileIndex = geojsonvt(res, tileOptions);
-                        const tile = tileIndex.getTile(
-                            request.params.z,
-                            request.params.x,
-                            request.params.y
-                        );
-                        const buffer = Buffer.from(
-                            vtpbf.fromGeojsonVt({ geojsonLayer: tile })
-                        );
-                        reply.type("application/protobuf").send(buffer);
+                        // const tileIndex = geojsonvt(res, tileOptions);
+                        // const tile = tileIndex.getTile(
+                        //   request.params.z,
+                        //   request.params.x,
+                        //   request.params.y
+                        // );
+                        // const buffer = Buffer.from(
+                        //   vtpbf.fromGeojsonVt({ geojsonLayer: tile })
+                        // );
+                        // reply.type("application/protobuf").send(buffer);
                     } else {
-                        reply.type("application/protobuf").send();
+                        reply.type("application/json").send({});
                     }
                 })
                 .catch((err) => {

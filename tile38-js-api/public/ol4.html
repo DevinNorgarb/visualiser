@@ -1,0 +1,212 @@
+<html>
+
+<head>
+    <title>Interleaving deck.gl with Mapbox Layers</title>
+    <script src="https://unpkg.com/deck.gl@^8.0.0/dist/dist.dev.js"></script>
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.0/mapbox-gl.js"></script>
+</head>
+
+<body style="margin:0"></body>
+<script type="text/javascript">
+    const {
+        MapboxLayer,
+        ScatterplotLayer,
+        ArcLayer,
+        MVTLayer,
+        HeatmapLayer,
+        H3HexagonLayer,
+        TileLayer,
+        BitmapLayer,
+        GeoJsonLayer
+    } = deck;
+    const AIR_PORTS = "http://localhost:3003/v1/intersects/pups_geojson_new/{z}/{x}/{y}"
+        // const AIR_PORTS = "https://tiles.devsdev.com/v1/intersects/pups_geojson_new/{z}/{x}/{y}"
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGV2aW5ub3JnYXJiIiwiYSI6ImNqdng0eHg2bzAxY3g0M3Fod2xhM3UwbjIifQ.EPhspJykDVYlIc7DTdoWYg'
+
+
+    const map = new mapboxgl.Map({
+        container: document.body,
+        style: 'mapbox://styles/devinnorgarb/ckxuo027la5r014pewu0nz12w',
+        center: [18.4241, -33.9249],
+        zoom: 18,
+        pitch: 60
+    });
+
+    map.on('load', () => {
+        const firstLabelLayerId = map.getStyle().layers.find(layer => layer.type === 'symbol').id;
+
+        map.addLayer({
+            'id': '3d-buildings',
+            'source': 'composite',
+            'source-layer': 'building',
+            'filter': ['==', 'extrude', 'true'],
+            'type': 'fill-extrusion',
+            'minzoom': 15,
+            'paint': {
+                'fill-extrusion-color': '#aaa',
+
+                // use an 'interpolate' expression to add a smooth transition effect to the
+                // buildings as the user zooms in
+                'fill-extrusion-height': [
+                    "interpolate", ["linear"],
+                    ["zoom"],
+                    15, 0,
+                    15.05, ["get", "height"]
+                ],
+                'fill-extrusion-base': [
+                    "interpolate", ["linear"],
+                    ["zoom"],
+                    15, 0,
+                    15.05, ["get", "min_height"]
+                ],
+                'fill-extrusion-opacity': .6
+            }
+        }, firstLabelLayerId);
+
+        // map.addLayer(new MapboxLayer({
+        //     id: 'deckgl-circle',
+        //     type: ScatterplotLayer,
+        //     data: [{
+        //         position: [-122.402, 37.79],
+        //         color: [255, 0, 0],
+        //         radius: 1000
+        //     }],
+        //     getPosition: d => d.position,
+        //     getColor: d => d.color,
+        //     getRadius: d => d.radius,
+        //     opacity: 0.3
+        // }), firstLabelLayerId);
+
+        // map.addLayer(new MapboxLayer({
+        //     id: 'deckgl-circle',
+        //     type: ScatterplotLayer,
+
+        //     data: [{
+        //         position: [-122.402, 37.79],
+        //         color: [255, 0, 0],
+        //         radius: 1000
+        //     }],sxcx
+        //     getPosition: d => d.position,
+        //     getColor: d => d.color,
+        //     getRadius: d => d.radius,
+        //     opacity: 0.3
+        // }), firstLabelLayerId);
+
+        // map.removeLayer('geojsonLayer')
+        // map.removeSource('pargo')
+
+        map.addLayer(new MapboxLayer({
+            id: 'geojsonLayer',
+            data: AIR_PORTS,
+            type: MVTLayer,
+            minZoom: 0,
+            maxZoom: 23,
+            getLineColor: [192, 192, 192],
+            getFillColor: [140, 170, 180],
+            // minZoom: 0,
+            // maxZoom: 19,
+            // tileSize: 256,
+            renderSubLayers: (props) => {
+                    console.log(props);
+                    // if (props) {
+
+                    //     if (props.data.length) {
+
+                    //         debugger
+                    // return new GeoJsonLayer({
+                    //     // id: 'geojson-layer',
+                    //     data: props.data,
+                    //     pickable: true,
+                    //     stroked: false,
+                    //     filled: true,
+                    //     extruded: true,
+                    //     pointType: 'circle',
+                    //     lineWidthScale: 20,
+                    //     lineWidthMinPixels: 2,
+                    //     getFillColor: [160, 160, 180, 200],
+                    //     // getLineColor: d => colorToRGBArray(d.properties.color),
+                    //     getPointRadius: 100,
+                    //     getLineWidth: 1,
+                    //     getElevation: 30
+                    // });
+                    //     }
+                    // }
+
+
+                    // if (props.data.points.properties.length) {
+
+                    // console.log(props.data.points.properties);
+                    // return new HeatmapLayer(props, {
+                    //     data: props.data,
+                    //     getPosition: d => d.COORDINATES,
+                    //     getWeight: d => d.WEIGHT,
+                    //     aggregation: 'SUM'
+
+                    //     // image: props.data,
+                    //     // bounds: [west, south, east, north]
+                    // });
+                    // }
+                }
+                // getPosition: d => d.COORDINATES,
+                // getWeight: d => d.WEIGHT,
+                // aggregation: 'SUM',
+                // Styles
+                // filled: false,
+                // pointRadiusMinPixels: 2,
+                // pointRadiusScale: 20,
+                // getPointRadius: 1,
+                // getFillColor: [200, 0, 80, 180],
+                // // Interactive props
+                // pickable: true,
+                // autoHighlight: true,
+                // onClick: info => info.object && console.log(`${JSON.stringify(info.object)} (${info.object.properties.id})`)
+                //     // renderSubLayers: props => {
+                //     //     console.log(props);
+                //     //     if (props.data.points) {
+                //     //         return new HeatmapLayer({
+                //     //             id: props.id,
+                // maxCacheSize
+                //             data: props.data,
+                //             getPosition: d => d.COORDINATES,
+                //             getWeight: d => d.WEIGHT,
+                //             aggregation: 'SUM'
+                //         })
+                //     }
+                // const {
+                //     bbox: {
+                //         west,
+                //         south,
+                //         east,
+                //         north
+                //     }
+                // } = props.tile;
+
+            // console.log(props);
+
+
+            // return new deck.H3HexagonLayer(props, {
+            //     data: null,
+            //     image: props.data,
+            //     // bounds: [west, south, east, north]
+            // });
+            // }
+        }));
+
+        // map.addLayer(new MapboxLayer({
+        //     id: 'ssssss',
+        //     type: ArcLayer,
+        //     data: [{
+        //         source: [-122.3998664, 37.7883697],
+        //         target: [-122.400068, 37.7900503]
+        //     }],
+        //     getSourcePosition: d => d.source,
+        //     getTargetPosition: d => d.target,
+        //     getSourceColor: [255, 208, 0],
+        //     getTargetColor: [0, 128, 255],
+        //     getWidth: 8
+        // }))
+    });
+</script>
+
+</html>

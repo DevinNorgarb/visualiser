@@ -33,51 +33,39 @@ foreach ($json_pups as $key => $pup) {
     $key = "pups_geojson_new";
 
 
-    $geojson = [
-        "type" => "Point",
-        "coordinates" => [
-            // [
-                (float)$pup['lng'],
-                (float)$pup['lat'],
-            // ]
-        ],
-        "properties" => [
-            "name" => "test"
-            // "id" => $pup['reference'],
-            // "count" => $pup['orders']
-        ]
 
-    ];
+    // for ($i=0; $i < $pup['orders']; $i++) {
+        # code...
 
 
+        // $json_e = json_encode($geojson);
+        // dump($pup['orders']);
 
-    $json_e = json_encode($geojson);
-    dump($pup['orders']);
+        if (!$pup['orders']) {
+            $pup['orders'] = 0 ;
+        }
+        // $ref = (string)$pup['reference'].$i;
+        $ref = (string) $pup['reference'].':'.$pup['orders'];
+        // dump($ref);
+        // dump('{"type":"Point","coordinates":['.$pup['lat'].",".$pup['lng'].'],"properties":{"id":"'. $pup['reference'] .'","orders":'. $pup['orders'] .'}}');
+        $res = $client->set($key, $ref, 'OBJECT', '{"type":"Point","coordinates":['.$pup['lat'].",".$pup['lng'].'],"properties":{"id":"'. $pup['reference'].':'.$pup['orders'] .'","orders":'. $pup['orders'] .'}}');
+        // dump($res);
 
-    if (!$pup['orders']) {
-        $pup['orders'] = 0 ;
-    }
 
-    // dump('{"type":"Point","coordinates":['.$pup['lat'].",".$pup['lng'].'],"properties":{"id":"'. $pup['reference'] .'","orders":'. $pup['orders'] .'}}');
-    $res = $client->set('points_encoded', $pup['reference'], 'object', '{"type":"Point","coordinates":['.$pup['lat'].",".$pup['lng'].'],"properties":{"id":"'. $pup['reference'] .'","orders":'. $pup['orders'] .'}}');
-    dump($res);
+        // SET city tempe OBJECT '{"type":"Polygon","coordinates":[[[-111.9787,33.4411],[-111.8902,33.4377],[-111.8950,33.2892],[-111.9739,33.2932],[-111.9787,33.4411]]]}'
+        // $json_e = urlencode($json_e);
 
+        // $cmd = "./tile38-cli SET $key {$ref} OBJECT ". "'". '{"type":"Point","coordinates":['.$pup['lat'].",".$pup['lng'].'],"properties":{"id":"'.$pup['reference'].$i .'","orders":"'. $pup['orders'].'"}}' . "'";
+        // dump($cmd);
 
-    // SET city tempe OBJECT '{"type":"Polygon","coordinates":[[[-111.9787,33.4411],[-111.8902,33.4377],[-111.8950,33.2892],[-111.9739,33.2932],[-111.9787,33.4411]]]}'
-    // $json_e = urlencode($json_e);
-
-    $cmd = "./tile38-cli SET pups_geojson_new {$pup['reference']} OBJECT ". "'". '{"type":"Point","coordinates":['.$pup['lat'].",".$pup['lng'].'],"properties":{"id":"'.$pup['reference'] .'","orders":'. $pup['orders'].'}}' . "'";
-    dump($cmd);
-
-echo shell_exec($cmd);
-// echo  exec("curl localhost:9851/set+{$key}+{$pup['reference']}+OBJECT+$json_e");
+        // echo shell_exec($cmd);
+        // echo  exec("curl localhost:9851/set+{$key}+{$pup['reference']}+OBJECT+$json_e");
 
 // dump("SET city tempe OBJECT " . "'".  '{"type":"Point","coordinates":['.$pup['lat'].",".$pup['lng'].'],"properties":{"id":"'. $pup['reference'] .'","orders":'. $pup['orders'] .'}}' . "'");
 
     // echo "Executed: " . "curl localhost:9851/set+{$key}+{$pup['reference']}+OBJECT+$json_e";
+    // }
 }
-
-
 // dump($json_file);
 
 
