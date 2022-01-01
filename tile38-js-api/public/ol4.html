@@ -1,4 +1,6 @@
 <html>
+<script src='https://github.com/lukasmartinelli/mapbox-gl-inspect/releases/download/v1.3.1/mapbox-gl-inspect.js'></script>
+<link href='https://github.com/lukasmartinelli/mapbox-gl-inspect/releases/download/v1.3.1/mapbox-gl-inspect.css' rel='stylesheet' />
 
 <head>
     <title>Interleaving deck.gl with Mapbox Layers</title>
@@ -76,6 +78,7 @@
                     'fill-extrusion-opacity': .6
                 }
             }, firstLabelLayerId);
+            map.addControl(new MapboxInspect());
 
 
             map.addSource('pargo-points', {
