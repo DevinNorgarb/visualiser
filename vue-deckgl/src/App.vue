@@ -165,7 +165,9 @@ mapboxgl.accessToken =
 
       // Get Data for visual
       var DATA_URL =
-        "https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/3d-heatmap/heatmap-data.csv";
+        "https://tiles.devsdev.com/pup_with_order_processes_count.csv";
+        // "https://raw.githubusercontent.com/uber-common/deck.gl-data/master/examples/3d-heatmap/heatmap-data.csv";
+
 
       //Create the deck.gl hexagon layer and style for the data
       var OPTIONS = ["radius", "coverage", "upperPercentile"];
