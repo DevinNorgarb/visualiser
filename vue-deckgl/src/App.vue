@@ -3,18 +3,18 @@
 <div id="control-panel">
   <div>
     <label>Radius</label>
-    <input id="radius" type="range" min="1000" max="20000" step="1000" value="1000"></input>
-    <span id="radius-value"></span>
+    <input id="radius" type="range" min="1000" max="20000" step="1000"@change="loadFake" v-model="radius"></input>
+    <span id="radius-value">{{radius}}</span>
   </div>
   <div>
     <label>Coverage</label>
-    <input id="coverage" type="range" min="0" max="1" step="0.1" value="1"></input>
-    <span id="coverage-value"></span>
+    <input id="coverage" type="range" min="0" max="1" step="0.1" @change="loadFake" v-model="coverage"></input>
+    <span id="coverage-value">{{coverage}}</span>
   </div>
   <div>
     <label>Upper Percentile</label>
-    <input id="upperPercentile" type="range" min="90" max="100" step="1" value="100"></input>
-    <span id="upperPercentile-value"></span>
+    <input id="upperPercentile" type="range" min="90" max="100" step="1"  @change="loadFake" v-model="upperPercentile"></input>
+    <span id="upperPercentile-value">{{upperPercentile}}</span>
   </div>
 </div>
 
@@ -41,7 +41,7 @@ export default {
       MAP_STYLE:
         "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
       DATA_URL:
-        "http://localhost:3003/pup_with_order_processes_count.csv",
+        "http://localhost:3000/pup_with_order_processes_count.csv",
       colorRange: [
         [1, 152, 189],
         [73, 227, 206],
@@ -71,7 +71,7 @@ export default {
       },
       mapStyle: this.MAP_STYLE,
       radius: 1000,
-      upperPercentile: 50,
+      upperPercentile: 90,
       coverage: 1,
       material: {
         ambient: 1,
@@ -174,9 +174,9 @@ this.map.on("load", () => {
           type: HexagonLayer,
           id: "heatmap",
           data: require("d3").csv(this.DATA_URL),
-          radius: 1000,
-          coverage: 1,
-          upperPercentile: 100,
+          radius: this.radius,
+          coverage: this.coverage,
+          upperPercentile: this.upperPercentile,
           colorRange: this.colorRange,
           elevationRange: [0, 1000],
           elevationScale: 250,
@@ -187,22 +187,40 @@ this.map.on("load", () => {
           opacity: 1,
         });
 
+        this.hexagonLayer = hexagonLayer;
+
         // Add the deck.gl hex layer below labels in the Mapbox map
         map.addLayer(hexagonLayer, "waterway-label");
       });
 
       // Add sliders to change the layer's settings based on user input
-      OPTIONS.forEach((key) => {
-        document.getElementById(key).onchange = (evt) => {
-          var value = Number(evt.target.value);
-          document.getElementById(key + "-value").innerHTML = value;
-          if (hexagonLayer) {
-            hexagonLayer.setProps({
-              [key]: value,
-            });
-          }
-        };
-      });
+this.updateValues(hexagonLayer)
+    },
+    updateValues(hexagonLayer, optiomns) {
+            var OPTIONS = ["radius", "coverage", "upperPercentile"];
+
+// if (!hexagonLayer) {
+//               OPTIONS.forEach((key) => {
+
+//   this.hexagonLayer.setProps({
+//     [key]: this.,
+//   });
+//       });
+
+// }
+
+
+      //       OPTIONS.forEach((key) => {
+      //   document.getElementById(key).onchange = (evt) => {
+      //     var value = Number(evt.target.value);
+      //     document.getElementById(key + "-value").innerHTML = value;
+      //     if (hexagonLayer) {
+      //       hexagonLayer.setProps({
+      //         [key]: value,
+      //       });
+      //     }
+      //   };
+      // });
     },
     loadLayer() {
       const hexagonLayer = new HexagonLayer({
