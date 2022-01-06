@@ -42,7 +42,7 @@ export default {
       MAP_STYLE:
         "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
       DATA_URL:
-        "/pup_with_order_processes_count.csv",
+        "https://raw.githubusercontent.com/DevinNorgarb/visualiser/master/vue-deckgl/public/pup_with_order_processes_count.csv",
       colorRange: [
         [1, 152, 189],
         [73, 227, 206],
