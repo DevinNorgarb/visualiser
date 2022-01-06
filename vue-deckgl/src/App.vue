@@ -32,6 +32,7 @@ import { HexagonLayer } from "@deck.gl/aggregation-layers";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { AmbientLight, PointLight, LightingEffect } from "@deck.gl/core";
+// import data from '@/data/someData.json'
 
 export default {
   data() {
@@ -41,7 +42,7 @@ export default {
       MAP_STYLE:
         "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
       DATA_URL:
-        "http://localhost:3000/pup_with_order_processes_count.csv",
+        "/pup_with_order_processes_count.csv",
       colorRange: [
         [1, 152, 189],
         [73, 227, 206],
@@ -198,29 +199,6 @@ this.updateValues(hexagonLayer)
     },
     updateValues(hexagonLayer, optiomns) {
             var OPTIONS = ["radius", "coverage", "upperPercentile"];
-
-// if (!hexagonLayer) {
-//               OPTIONS.forEach((key) => {
-
-//   this.hexagonLayer.setProps({
-//     [key]: this.,
-//   });
-//       });
-
-// }
-
-
-      //       OPTIONS.forEach((key) => {
-      //   document.getElementById(key).onchange = (evt) => {
-      //     var value = Number(evt.target.value);
-      //     document.getElementById(key + "-value").innerHTML = value;
-      //     if (hexagonLayer) {
-      //       hexagonLayer.setProps({
-      //         [key]: value,
-      //       });
-      //     }
-      //   };
-      // });
     },
     loadLayer() {
       const hexagonLayer = new HexagonLayer({
