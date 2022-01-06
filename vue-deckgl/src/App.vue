@@ -3,14 +3,14 @@
 <div id="control-panel">
   <div>
     <label>Radius</label>
-    <input id="radius" type="range" min="1000" max="20000" step="1000"@change="loadFake" v-model="radius"></input>
+    <input id="radius" type="range" min="100" max="2000" step="100"@change="loadFake" v-model="radius"></input>
     <span id="radius-value">{{radius}}</span>
   </div>
-  <div>
+  <!-- <div>
     <label>Coverage</label>
     <input id="coverage" type="range" min="0" max="1" step="0.1" @change="loadFake" v-model="coverage"></input>
     <span id="coverage-value">{{coverage}}</span>
-  </div>
+  </div> -->
   <div>
     <label>Upper Percentile</label>
     <input id="upperPercentile" type="range" min="90" max="100" step="1"  @change="loadFake" v-model="upperPercentile"></input>
@@ -41,9 +41,12 @@ export default {
       deck: {},
       MAP_STYLE:
         "https://basemaps.cartocdn.com/gl/dark-matter-nolabels-gl-style/style.json",
-      DATA_URL:
-        "https://raw.githubusercontent.com/DevinNorgarb/visualiser/master/vue-deckgl/public/pup_with_order_processes_count.csv",
-      colorRange: [
+      DATA_URL: "https://raw.githubusercontent.com/DevinNorgarb/visualiser/master/vue-deckgl/public/pup_with_order_processes_count.csv",
+              // "http://localhost:3000/pup_with_order_processes_count.csv",
+
+        // "https://raw.githubusercontent.com/DevinNorgarb/visualiser/master/vue-deckgl/public/pup_with_order_processes_count.csv",
+
+colorRange: [
         [1, 152, 189],
         [73, 227, 206],
         [216, 254, 181],
