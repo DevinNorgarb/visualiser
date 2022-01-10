@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  # creationTimestamp: null
+  labels:
+    io.kompose.service: vue-deckgl
+  name: vue-deckgl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: vue-deckgl
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      # creationTimestamp: null
+      labels:
+        io.kompose.service: vue-deckgl
+    spec:
+      containers:
+        - image: vue-deckgl
+          name: vue-deckgl
+          ports:
+            - containerPort: 3000
+          resources: {}
+          volumeMounts:
+            - mountPath: /app
+              name: vue-deckgl-claim0
+            - mountPath: /app/node_modules
+              name: vue-deckgl-claim1
+      restartPolicy: Always
+      volumes:
+        - name: vue-deckgl-claim0
+          persistentVolumeClaim:
+            claimName: vue-deckgl-claim0
+        - name: vue-deckgl-claim1
+          persistentVolumeClaim:
+            claimName: vue-deckgl-claim1
+status: {}
